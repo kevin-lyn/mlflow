@@ -388,7 +388,25 @@ export const FocusedReview = ({
   };
 
   return (
-    <div css={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.md, height: '100%' }}>
+    <div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing.md,
+        height: '100%',
+        // Entrance transition when the reviewer clicks "Start review" (or opens a
+        // trace from the list): the list unmounts and this view mounts, so the
+        // meaningful motion is this view fading + sliding in. Guarded so it's a
+        // no-op under prefers-reduced-motion.
+        '@media (not (prefers-reduced-motion))': {
+          animation: 'mlflow-focused-review-enter 200ms ease-out',
+          '@keyframes mlflow-focused-review-enter': {
+            from: { opacity: 0, transform: 'translateY(8px)' },
+            to: { opacity: 1, transform: 'translateY(0)' },
+          },
+        },
+      }}
+    >
       <div css={{ display: 'flex', alignItems: 'center', gap: theme.spacing.sm }}>
         <Button componentId={`${CID}.back`} type="tertiary" icon={<CloseSmallIcon />} onClick={onBack}>
           <FormattedMessage defaultMessage="Exit review" description="Review focused view: exit review button" />
